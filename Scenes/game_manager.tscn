@@ -1,0 +1,142 @@
+[gd_scene load_steps=14 format=3 uid="uid://dq3euyrilglj8"]
+
+[ext_resource type="Script" path="res://Scripts/game_manager.gd" id="1_h76j4"]
+[ext_resource type="Script" path="res://Scripts/UI.gd" id="2_1lwmk"]
+[ext_resource type="Script" path="res://Scripts/Paddle.gd" id="3_lgdvt"]
+[ext_resource type="PackedScene" uid="uid://cth8hfawkv3mb" path="res://Scenes/ball.tscn" id="4_fenfy"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8ugrq"]
+font_size = 40
+
+[sub_resource type="LabelSettings" id="LabelSettings_50mrw"]
+font_size = 40
+
+[sub_resource type="Gradient" id="Gradient_iqsni"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3nnr1"]
+gradient = SubResource("Gradient_iqsni")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q3m88"]
+size = Vector2(16, 137)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0pq74"]
+size = Vector2(1173, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bseyf"]
+size = Vector2(97, 609)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jumw3"]
+size = Vector2(1169, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ntfml"]
+size = Vector2(84.5, 608)
+
+[node name="GameManager" type="Node2D"]
+script = ExtResource("1_h76j4")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_1lwmk")
+
+[node name="LeftScore" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 362.0
+offset_top = 1.0
+offset_right = 483.0
+offset_bottom = 56.0
+text = "0"
+label_settings = SubResource("LabelSettings_8ugrq")
+horizontal_alignment = 2
+
+[node name="RightScore" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 650.0
+offset_right = 749.0
+offset_bottom = 55.0
+text = "0"
+label_settings = SubResource("LabelSettings_50mrw")
+
+[node name="Paddle1" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(50, 326)
+scale = Vector2(1, 0.52159)
+script = ExtResource("3_lgdvt")
+
+[node name="Sprite2D" type="Sprite2D" parent="Paddle1"]
+position = Vector2(-1.49995, -0.499991)
+scale = Vector2(0.0742184, 133)
+texture = SubResource("GradientTexture1D_3nnr1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Paddle1"]
+shape = SubResource("RectangleShape2D_q3m88")
+
+[node name="Paddle2" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(1097, 326)
+rotation = 3.14159
+scale = Vector2(1, 0.48)
+script = ExtResource("3_lgdvt")
+
+[node name="Sprite2D" type="Sprite2D" parent="Paddle2"]
+position = Vector2(-1.49995, -0.499991)
+scale = Vector2(0.0742184, 133)
+texture = SubResource("GradientTexture1D_3nnr1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Paddle2"]
+shape = SubResource("RectangleShape2D_q3m88")
+
+[node name="Ball" parent="." instance=ExtResource("4_fenfy")]
+unique_name_in_owner = true
+motion_mode = 1
+wall_min_slide_angle = 0.0
+
+[node name="Bounds" type="Node" parent="."]
+
+[node name="Bottom" type="Area2D" parent="Bounds"]
+position = Vector2(571, 637)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/Bottom"]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_0pq74")
+
+[node name="Sprite2D" type="Sprite2D" parent="Bounds/Bottom"]
+scale = Vector2(4.58984, 20.5)
+texture = SubResource("GradientTexture1D_3nnr1")
+
+[node name="Left" type="Area2D" parent="Bounds"]
+position = Vector2(-36, 356)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/Left"]
+shape = SubResource("RectangleShape2D_bseyf")
+
+[node name="Top" type="Area2D" parent="Bounds"]
+position = Vector2(576, 62)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/Top"]
+position = Vector2(-0.500122, 1.25)
+shape = SubResource("RectangleShape2D_jumw3")
+
+[node name="Sprite2D" type="Sprite2D" parent="Bounds/Top"]
+position = Vector2(1.49988, 1.25)
+scale = Vector2(4.58984, 20.5)
+texture = SubResource("GradientTexture1D_3nnr1")
+
+[node name="Right" type="Area2D" parent="Bounds"]
+position = Vector2(1180, 357)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/Right"]
+shape = SubResource("RectangleShape2D_ntfml")
+
+[connection signal="score_changed" from="." to="UI" method="_on_game_manager_score_changed"]
+[connection signal="area_entered" from="Paddle1" to="Paddle1" method="_on_paddle_bounce"]
+[connection signal="on_bounce" from="Paddle1" to="." method="_on_paddle_bounce"]
+[connection signal="area_entered" from="Paddle2" to="Paddle2" method="_on_paddle_bounce"]
+[connection signal="on_bounce" from="Paddle2" to="." method="_on_paddle_bounce"]
+[connection signal="body_entered" from="Bounds/Bottom" to="." method="_on_bottom_body_entered"]
+[connection signal="body_entered" from="Bounds/Left" to="." method="_on_left_body_entered"]
+[connection signal="body_entered" from="Bounds/Top" to="." method="_on_top_body_entered"]
+[connection signal="body_entered" from="Bounds/Right" to="." method="_on_right_body_entered"]
