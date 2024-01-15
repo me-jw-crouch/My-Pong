@@ -1,3 +1,8 @@
 res://Scenes/game_manager.tscn
 res://Scenes/ball.tres
 res://Scenes/ball.gdshader
+res://Scripts/UI.gd
+res://Scripts/audio_manager.gd
+res://Scripts/game_manager.gd
+res://Scripts/Paddle.gd
+res://Scripts/Ball.gd

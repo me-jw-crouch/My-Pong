@@ -1,17 +1,15 @@
 extends Node
 
-var num_players = 8
-var bus = "master"
 
-var available : Array	# The available players.
-var queue : Array		# The queue of sounds to play.
+# Properties
+var available :Array = []	# The available players.
+var queue :Array = []		# The queue of sounds to play.
+var num_players :int = 8	# The total number of sound players.
+var bus :String = "master"	# Bus type
 
-func _init():
-	available = []
-	queue = []
 
+# Creates the avaialble pool of AudioStreamPlayer nodes.
 func _ready():
-	# Create the pool of AudioStreamPlayer nodes.
 	for i in num_players:
 		var p = AudioStreamPlayer.new()
 		p.volume_db = -15
@@ -20,15 +18,19 @@ func _ready():
 		p.finished.connect(_on_stream_finished.bind(p))
 		p.bus = bus
 
+
+# When finished playing a stream, makes the player available again.
 func _on_stream_finished(stream):
-	# When finished playing a stream, make the player available again.
 	available.append(stream)
 
+
+# Adds the sound_path to the queue of sounds to play.
 func play(sound_path):
 	queue.append(sound_path)
 
-func _process(delta):
-	# Play a queued sound if any players are available.
+
+# Play a queued sound if any players are available.
+func _process(_delta):
 	if not queue.is_empty() and not available.is_empty():
 		available[0].stream = load(queue.pop_front())
 		available[0].play()
