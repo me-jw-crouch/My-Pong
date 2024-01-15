@@ -55,6 +55,5 @@ func _on_paddle_bounce(_ball: Area2D):
 # factor. Ensures the paddle stays within its allowed Y position range.
 func move_towards_pos(y_position: float, delta: float):
 	var distance = (y_position - position.y) * delta
-
 	distance *= accuracy
 	position.y = clamp(position.y + distance, minY, maxY)
